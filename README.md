@@ -13,15 +13,16 @@
 
 ## 🚀 Instalação Rápida
 
-### Linux/macOS
+### 🐧 Linux / 🍎 macOS
 ```bash
 curl -fsSL https://raw.githubusercontent.com/inotyu/hypr/main/install.sh | bash
 ```
 
-### Windows
-```bash
-# Usando PowerShell
-irm https://raw.githubusercontent.com/inotyu/hypr/main/install.sh | bash
+### 🪟 Windows
+```powershell
+# PowerShell como Administrador
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+irm https://raw.githubusercontent.com/inotyu/hypr/main/install.ps1 | iex
 ```
 
 O script instala automaticamente:
@@ -32,7 +33,20 @@ O script instala automaticamente:
 
 ## 📖 Como Usar
 
+### 🐧 Linux / 🍎 macOS
 ```bash
+# Buscar animes
+hypr naruto
+
+# Modo interativo forçado
+hypr -i
+
+# Resultados completos (sem interface)
+hypr -f naruto
+```
+
+### 🪟 Windows
+```powershell
 # Buscar animes
 hypr naruto
 
@@ -61,6 +75,7 @@ hypr -f naruto
 
 ### 📥 Clonando e Configurando
 
+#### 🐧 Linux / 🍎 macOS
 ```bash
 # 1. Clonar o repositório
 git clone https://github.com/inotyu/hypr.git
@@ -75,35 +90,55 @@ sudo pacman -S python python-pip                  # Arch
 # macOS
 brew install python3
 
-# Windows: Baixe de https://python.org
-
 # 3. Criar ambiente virtual (recomendado)
 python3 -m venv venv
-source venv/bin/activate  # Linux/macOS
-# venv\Scripts\activate   # Windows
+source venv/bin/activate
 
-# 4. Instalar dependências de desenvolvimento
+# 4. Instalar dependências
 pip install selenium webdriver-manager yt-dlp requests
 
-# Para Windows (interface curses)
-pip install windows-curses
-
 # 5. Instalar dependências do sistema
-# Linux
 sudo apt install mpv google-chrome-stable  # Ubuntu/Debian
 sudo dnf install mpv google-chrome-stable   # Fedora
 sudo pacman -S mpv google-chrome            # Arch
-
 # macOS
 brew install mpv google-chrome
-
-# Windows: Instale MPV e Chrome manualmente
 
 # 6. Testar instalação
 python3 -c "import selenium, yt_dlp; print('✅ Dependências OK')"
 
 # 7. Executar
 python3 hypr_scraper/hypr naruto
+```
+
+#### 🪟 Windows
+```powershell
+# 1. Clonar o repositório
+git clone https://github.com/inotyu/hypr.git
+cd hypr
+
+# 2. Instalar Python (baixe de python.org)
+# Verifique a opção "Add Python to PATH"
+
+# 3. Criar ambiente virtual (recomendado)
+python -m venv venv
+venv\Scripts\activate
+
+# 4. Instalar dependências
+pip install selenium webdriver-manager yt-dlp requests windows-curses
+
+# 5. Instalar dependências do sistema
+# Google Chrome: google.com/chrome
+# MPV Player: mpv.io ou via Chocolatey/Scoop
+choco install mpv
+# ou
+scoop install mpv
+
+# 6. Testar instalação
+python -c "import selenium, yt_dlp; print('✅ Dependências OK')"
+
+# 7. Executar
+python hypr_scraper/hypr naruto
 ```
 
 ### 🔧 Estrutura para Modificações
@@ -155,41 +190,62 @@ git push origin feature-sua-ideia
 
 ```
 hypr/
-├── install.sh          # Script de instalação automática
+├── install.sh          # Script de instalação Linux/macOS
+├── install.ps1         # Script de instalação Windows
+├── WINDOWS_SETUP.md    # Guia detalhado Windows
+├── README.md           # Este arquivo
 ├── hypr_scraper/
 │   ├── hypr            # Executável principal
 │   └── src/
 │       ├── cli/        # Interface de linha de comando
 │       │   ├── interactive.py    # Modo interativo
 │       │   └── selector.py       # Seleção com curses
-│       └── scraper/   # Módulos de scraping
-│           └── hypr_scraper.py   # Scraper principal
-└── README.md          # Esta documentação
+│       ├── scraper/     # Lógica de web scraping
+│       │   └── hypr_scraper.py   # Scraper principal
+│       ├── models/      # Models de dados
+│       │   ├── anime.py         # Modelo Anime
+│       │   └── episode.py       # Modelo Episode
+│       └── utils/       # Utilitários
+│           └── exceptions.py     # Exceções customizadas
+└── requirements.txt    # Dependências Python
 ```
+
+## 🔗 Links Úteis
+
+### 📖 Guias Específicos
+- **[🪟 Windows Setup Guide](WINDOWS_SETUP.md)** - Guia completo para Windows
+- **[🐧 Linux/macOS](install.sh)** - Script de instalação automática
+
+### 🛠️ Dependências
+- **[Python 3.11+](https://www.python.org/downloads/)** - Linguagem principal
+- **[Google Chrome](https://www.google.com/chrome/)** - Navegador para scraping
+- **[MPV Player](https://mpv.io/)** - Reprodutor de vídeo recomendado
+
+### 📦 Gerenciadores de Pacotes
+- **[Chocolatey (Windows)](https://chocolatey.org/)** - `choco install mpv`
+- **[Scoop (Windows)](https://scoop.sh/)** - `scoop install mpv`
+- **[Homebrew (macOS)](https://brew.sh/)** - `brew install mpv`
 
 ## 🤝 Contribuição
 
-Contribuições são bem-vindas! Sinta-se à vontade para:
+Contribuições são bem-vindas! Por favor:
 
-- 🐛 Reportar bugs
-- 💡 Sugerir melhorias
-- 🔧 Enviar pull requests
-- 📖 Melhorar a documentação
+1. **Faça um Fork** do projeto
+2. **Crie uma Branch** para sua feature (`git checkout -b feature/AmazingFeature`)
+3. **Commit suas mudanças** (`git commit -m 'Add some AmazingFeature'`)
+4. **Push para a Branch** (`git push origin feature/AmazingFeature`)
+5. **Abra um Pull Request**
 
-## 📄 Licença
+## 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está sob a Licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## ⚠️ Aviso Legal
+## 🐛 Problemas e Suporte
 
-Este projeto é apenas para fins educacionais. Use-o apenas para acessar conteúdo que você tem direito de assistir. Os desenvolvedores não se responsabilizam pelo uso indevido.
-
-## 🙏 Créditos
-
-- **Selenium**: Automação web
-- **MPV**: Melhor player de vídeo
-- **yt-dlp**: Extração de streams
+- **[Abrir Issue](https://github.com/inotyu/hypr/issues)** - Reportar bugs
+- **[Discussions](https://github.com/inotyu/hypr/discussions)** - Dúvidas e sugestões
+- **[Wiki](https://github.com/inotyu/hypr/wiki)** - Documentação adicional
 
 ---
 
-**Em desenvolvimento constante.** 🎌
+⭐ **Se este projeto ajudou você, deixe uma estrela!**
