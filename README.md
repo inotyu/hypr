@@ -15,13 +15,13 @@
 
 ### Linux/macOS
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SEU_USERNAME/hypr/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/inotyu/hypr/main/install.sh | bash
 ```
 
 ### Windows
 ```bash
 # Usando PowerShell
-irm https://raw.githubusercontent.com/SEU_USERNAME/hypr/main/install.sh | bash
+irm https://raw.githubusercontent.com/inotyu/hypr/main/install.sh | bash
 ```
 
 O script instala automaticamente:
@@ -63,7 +63,7 @@ hypr -f naruto
 
 ```bash
 # 1. Clonar o repositório
-git clone https://github.com/SEU_USERNAME/hypr.git
+git clone https://github.com/inotyu/hypr.git
 cd hypr
 
 # 2. Instalar Python (se necessário)
