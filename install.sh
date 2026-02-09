@@ -12,7 +12,7 @@ echo "   • MPV player"
 echo "   • Todas as dependências"
 echo ""
 read -p "Continuar? (y/N): " -n 1 -r
-echo
+echo ""
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "❌ Instalação cancelada."
     exit 1
@@ -142,7 +142,7 @@ fi
 
 # Instalar MPV player
 if ! command -v mpv &> /dev/null; then
-    echo "� Instalando MPV player..."
+    echo "🎥 Instalando MPV player..."
     if [ "$OS" = "linux" ]; then
         case $PACKAGE_MANAGER in
             apt) install_package "mpv" ;;
@@ -247,5 +247,5 @@ echo ""
 echo "📋 O Hypr está pronto para uso!"
 echo "🎬 Aproveite seus animes!"
 echo ""
-echo "� Dica: Se quiser atualizar depois, rode:"
+echo "💡 Dica: Se quiser atualizar depois, rode:"
 echo "   python3 -m pip install --user --upgrade selenium yt-dlp"
