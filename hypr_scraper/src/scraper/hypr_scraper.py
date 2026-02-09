@@ -8,7 +8,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from src.utils.exceptions import HyprScraperError, NetworkError
+try:
+    from src.utils.exceptions import HyprScraperError, NetworkError
+except ImportError:
+    # Fallback for direct execution
+    class HyprScraperError(Exception):
+        pass
+    class NetworkError(HyprScraperError):
+        pass
 
 
 class HyprScraper:

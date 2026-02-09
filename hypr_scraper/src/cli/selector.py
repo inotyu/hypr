@@ -2,6 +2,8 @@
 
 import sys
 import curses
+import platform
+import subprocess
 from typing import List, Optional
 from src.models.anime import Anime
 from src.models.episode import Episode
@@ -139,7 +141,12 @@ class KeyboardSelector:
                         self.screen = None
                         
                         try:
-                            from src.scraper.hypr_scraper import HyprScraper
+                            # Importação relativa para evitar problemas de path
+                            try:
+                                from src.scraper.hypr_scraper import HyprScraper
+                            except ImportError:
+                                from hypr_scraper.src.scraper.hypr_scraper import HyprScraper
+                            
                             with HyprScraper() as scraper:
                                 video_url = scraper.get_video_url(episodes[current_row].url)
                                 
@@ -184,8 +191,10 @@ class KeyboardSelector:
                                         print(f"❌ Não foi possível abrir o vídeo")
                                 else:
                                     print(f"❌ URL do vídeo não encontrada")
-                        except Exception:
+                        except Exception as e:
                             print(f"❌ Erro ao carregar vídeo")
+                            import traceback
+                            traceback.print_exc()
                         
                         print("Pressione Enter para continuar...")
                         input()
