@@ -5,8 +5,14 @@ import curses
 import platform
 import subprocess
 from typing import List, Optional
-from src.models.anime import Anime
-from src.models.episode import Episode
+
+# Importações com fallback para evitar problemas de path
+try:
+    from src.models.anime import Anime
+    from src.models.episode import Episode
+except ImportError:
+    from hypr_scraper.src.models.anime import Anime
+    from hypr_scraper.src.models.episode import Episode
 
 
 class KeyboardSelector:

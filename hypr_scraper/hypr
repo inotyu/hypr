@@ -9,9 +9,15 @@ import os
 # Add src directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from src.scraper.hypr_scraper import HyprScraper
-from src.cli.formatter import OutputFormatter
-from src.cli.interactive import InteractiveMode
+# Importações com fallback para evitar problemas de path
+try:
+    from src.scraper.hypr_scraper import HyprScraper
+    from src.cli.formatter import OutputFormatter
+    from src.cli.interactive import InteractiveMode
+except ImportError:
+    from hypr_scraper.src.scraper.hypr_scraper import HyprScraper
+    from hypr_scraper.src.cli.formatter import OutputFormatter
+    from hypr_scraper.src.cli.interactive import InteractiveMode
 
 
 def main():
@@ -61,8 +67,8 @@ def main():
                 print(f"❌ Nenhum resultado encontrado para: {query}")
                 return 0
             
-            # If multiple results, use interactive mode by default
-            if len(animes) > 1 and not full_mode:
+            # If multiple results OR not in full mode, use interactive mode
+            if len(animes) >= 1 and not full_mode:
                 interactive = InteractiveMode()
                 return interactive.run(query)
             

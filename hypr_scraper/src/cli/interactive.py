@@ -2,11 +2,20 @@
 
 import sys
 from typing import List, Optional
-from src.scraper.hypr_scraper import HyprScraper
-from src.models.anime import Anime
-from src.models.episode import Episode
-from src.utils.exceptions import HyprScraperError
-from src.cli.selector import KeyboardSelector
+
+# Importações com fallback para evitar problemas de path
+try:
+    from src.scraper.hypr_scraper import HyprScraper
+    from src.models.anime import Anime
+    from src.models.episode import Episode
+    from src.utils.exceptions import HyprScraperError
+    from src.cli.selector import KeyboardSelector
+except ImportError:
+    from hypr_scraper.src.scraper.hypr_scraper import HyprScraper
+    from hypr_scraper.src.models.anime import Anime
+    from hypr_scraper.src.models.episode import Episode
+    from hypr_scraper.src.utils.exceptions import HyprScraperError
+    from hypr_scraper.src.cli.selector import KeyboardSelector
 
 
 class InteractiveMode:

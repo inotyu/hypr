@@ -1,5 +1,10 @@
 from typing import List
-from src.models.anime import Anime
+
+# Importações com fallback para evitar problemas de path
+try:
+    from src.models.anime import Anime
+except ImportError:
+    from hypr_scraper.src.models.anime import Anime
 
 
 class OutputFormatter:
@@ -24,21 +29,35 @@ class OutputFormatter:
         output.append(f"📊 Found {len(animes)} results\n")
         
         for i, anime in enumerate(animes, 1):
-            output.append(f"{i}. {anime.title}")
+            # Tratar tanto objetos Anime quanto dicionários
+            if hasattr(anime, 'title'):
+                title = anime.title
+                year = anime.year if hasattr(anime, 'year') else None
+                rating = anime.rating if hasattr(anime, 'rating') else None
+                anime_type = anime.type if hasattr(anime, 'type') else None
+                description = anime.description if hasattr(anime, 'description') else None
+            else:
+                title = anime.get('title', 'Sem título')
+                year = anime.get('year')
+                rating = anime.get('rating')
+                anime_type = anime.get('type')
+                description = anime.get('description')
             
-            if anime.year:
-                output.append(f"   📅 Year: {anime.year}")
+            output.append(f"{i}. {title}")
             
-            if anime.rating:
-                output.append(f"   ⭐ Rating: {anime.rating}")
+            if year:
+                output.append(f"   📅 Year: {year}")
             
-            if anime.type:
-                output.append(f"   🎬 Type: {anime.type}")
+            if rating:
+                output.append(f"   ⭐ Rating: {rating}")
             
-            if anime.description:
-                output.append(f"   📝 {anime.description}")
+            if anime_type:
+                output.append(f"   🎬 Type: {anime_type}")
             
-            output.append(f"   🔗 {anime.url}")
+            if description:
+                output.append(f"   📝 {description}")
+            
+            output.append(f"   🔗 {anime.url if hasattr(anime, 'url') else anime.get('url', '')}")
             output.append("")
         
         return "\n".join(output)
@@ -57,5 +76,11 @@ class OutputFormatter:
         if not animes:
             return "No results found"
         
-        titles = [f"{i + 1}. {anime.title}" for i, anime in enumerate(animes)]
+        titles = []
+        for i, anime in enumerate(animes):
+            if hasattr(anime, 'title'):
+                title = anime.title
+            else:
+                title = anime.get('title', 'Sem título')
+            titles.append(f"{i + 1}. {title}")
         return "\n".join(titles)
