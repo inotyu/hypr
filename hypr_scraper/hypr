@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""
+Hypr Anime Scraper - CLI
+"""
+
+import sys
+import os
+
+# Add src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from src.scraper.hypr_scraper import HyprScraper
+from src.cli.formatter import OutputFormatter
+from src.cli.interactive import InteractiveMode
+
+
+def main():
+    """CLI para buscar animes."""
+    if len(sys.argv) < 2:
+        print("🎬 Hypr Anime Scraper")
+        print("Uso: hypr 'nome do anime'")
+        print("Exemplo: hypr 'kaoru'")
+        print("")
+        print("Opções:")
+        print("  -f, --full      Mostra resultados completos (sem modo interativo)")
+        print("  -i, --interactive  Força modo interativo")
+        return 1
+    
+    query = ' '.join(sys.argv[1:])
+    
+    # Check for interactive mode
+    if query in ['-i', '--interactive']:
+        interactive = InteractiveMode()
+        return interactive.run()
+    elif query.startswith('-i '):
+        query = query[3:]
+        interactive = InteractiveMode()
+        return interactive.run(query)
+    elif query.startswith('--interactive '):
+        query = query[13:]
+        interactive = InteractiveMode()
+        return interactive.run(query)
+    
+    # Check for full flag
+    full_mode = False
+    if query in ['-f', '--full']:
+        print("❌ Erro: Especifique o nome do anime")
+        return 1
+    elif query.startswith('-f '):
+        query = query[3:]
+        full_mode = True
+    elif query.startswith('--full '):
+        query = query[9:]
+        full_mode = True
+    
+    try:
+        with HyprScraper() as scraper:
+            animes = scraper.search_anime(query)
+            
+            if not animes:
+                print(f"❌ Nenhum resultado encontrado para: {query}")
+                return 0
+            
+            # If multiple results, use interactive mode by default
+            if len(animes) > 1 and not full_mode:
+                interactive = InteractiveMode()
+                return interactive.run(query)
+            
+            formatter = OutputFormatter()
+            
+            if full_mode:
+                output = formatter.format_console(animes, query)
+            else:
+                output = formatter.format_simple(animes)
+            
+            print(output)
+            return 0
+            
+    except Exception as e:
+        print(f"❌ Erro: {e}")
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

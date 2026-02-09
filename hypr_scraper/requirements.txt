@@ -1,0 +1,4 @@
+requests>=2.25.0
+beautifulsoup4>=4.9.0
+html5lib
+selenium>=4.0.0
