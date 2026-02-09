@@ -1,4 +1,4 @@
-# Hypr - Anime Scraper
+# HyprOnline - Anime Scraper
 
 🎬 **O melhor scraper de animes para terminal!** Busque, selecione e assista seus animes favoritos diretamente no terminal.
 
