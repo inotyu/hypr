@@ -166,18 +166,21 @@ class KeyboardSelector:
                                     if system == "linux":
                                         # Linux: tentar mpv primeiro, depois browser
                                         players = [
+                                            ["mpv", "--no-ytdl", video_url],  # Desabilitar yt-dlp
                                             ["mpv", video_url],
                                             ["xdg-open", video_url]
                                         ]
                                     elif system == "windows":
                                         # Windows: tentar mpv primeiro, depois browser padrão
                                         players = [
+                                            ["mpv.exe", "--no-ytdl", video_url],  # Desabilitar yt-dlp
                                             ["mpv.exe", video_url],
                                             ["cmd", "/c", "start", video_url]
                                         ]
                                     elif system == "darwin":  # macOS
                                         # macOS: tentar mpv primeiro, depois browser
                                         players = [
+                                            ["mpv", "--no-ytdl", video_url],  # Desabilitar yt-dlp
                                             ["mpv", video_url],
                                             ["open", video_url]
                                         ]
