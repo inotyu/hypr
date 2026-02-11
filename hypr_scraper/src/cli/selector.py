@@ -178,10 +178,15 @@ class KeyboardSelector:
                                             ["cmd", "/c", "start", video_url]
                                         ]
                                     elif system == "darwin":  # macOS
-                                        # macOS: tentar mpv primeiro, depois browser
+                                        # macOS: tentar MPV primeiro com HLS support
                                         players = [
-                                            ["mpv", "--no-ytdl", video_url],  # Desabilitar yt-dlp
+                                            ["mpv", "--no-ytdl", "--demuxer-lavf-format=hls", "--demuxer-lavf-o=timeout=10000000", video_url],  # MPV com HLS
+                                            ["mpv", "--no-ytdl", "--demuxer=hls", video_url],
+                                            ["mpv", "--no-ytdl", "--ytdl-raw-options=extract_flat=True", video_url],  # Tentar processar HTML
+                                            ["mpv", "--no-ytdl", video_url],
                                             ["mpv", video_url],
+                                            ["vlc", "--no-video-title-show", video_url],  # VLC como fallback
+                                            ["cvlc", video_url],
                                             ["open", video_url]
                                         ]
                                     else:

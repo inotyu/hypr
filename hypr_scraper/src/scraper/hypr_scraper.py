@@ -166,6 +166,71 @@ class HyprScraper:
         # Default to 0 if no episode number found
         return 0
     
+    def _resolve_redirect_url(self, url: str) -> str:
+        """Resolve redirect URLs to get the final URL."""
+        try:
+            import requests
+            # Follow redirects and get final URL
+            response = requests.head(url, allow_redirects=True, timeout=10)
+            return response.url
+        except Exception:
+            return url
+    
+    def _parse_m3u8_segments(self, url: str) -> str:
+        """Parse M3U8 playlist or HTML redirect and return video URL."""
+        try:
+            import requests
+            import re
+            
+            # Download content
+            headers = {'Referer': 'https://animesdigital.org'}
+            response = requests.get(url, headers=headers, timeout=10)
+            content = response.text
+            
+            # Check if it's HTML (redirect page) or M3U8
+            if content.strip().startswith('#EXTM3U'):
+                # It's a real M3U8 file
+                lines = content.split('\n')
+                for line in lines:
+                    line = line.strip()
+                    if line and not line.startswith('#') and (line.endswith('.ts') or line.endswith('.mp4')):
+                        # If relative URL, make it absolute
+                        if line.startswith('http'):
+                            return line
+                        else:
+                            # Extract base URL from M3U8 URL
+                            base_url = url.rsplit('/', 1)[0]
+                            return f"{base_url}/{line}"
+            else:
+                # It's HTML, extract M3U8 URL from JavaScript
+                file_match = re.search(r"file\s*:\s*['\"]([^'\"]*\.m3u8[^'\"]*)['\"]", content)
+                if file_match:
+                    m3u8_url = file_match.group(1)
+                    if m3u8_url.startswith('http'):
+                        # Now download the real M3U8
+                        m3u8_response = requests.get(m3u8_url, headers=headers, timeout=10)
+                        m3u8_content = m3u8_response.text
+                        
+                        if m3u8_content.strip().startswith('#EXTM3U'):
+                            lines = m3u8_content.split('\n')
+                            for line in lines:
+                                line = line.strip()
+                                if line and not line.startswith('#') and (line.endswith('.ts') or line.endswith('.mp4')):
+                                    # If relative URL, make it absolute
+                                    if line.startswith('http'):
+                                        return line
+                                    else:
+                                        # Extract base URL from M3U8 URL
+                                        base_url = m3u8_url.rsplit('/', 1)[0]
+                                        return f"{base_url}/{line}"
+            
+            # If no segments found, return original URL
+            return url
+            
+        except Exception as e:
+            print(f"Erro ao fazer parse M3U8: {e}")
+            return url
+    
     def _capture_google_video_url(self) -> Optional[str]:
         """Capture video URL from network logs - ultra fast version."""
         try:
@@ -250,9 +315,15 @@ class HyprScraper:
             time.sleep(3)
             
             # Capture video URL from network logs
-            video_url = self._capture_google_video_url()
-            if video_url:
-                return video_url
+            found_video_url = self._capture_google_video_url()
+            if found_video_url:
+                resolved_url = self._resolve_redirect_url(found_video_url)
+                # If it's an M3U8 URL, try to parse it for direct segments
+                if '.m3u8' in resolved_url.lower():
+                    segment_url = self._parse_m3u8_segments(resolved_url)
+                    if segment_url != resolved_url:
+                        return segment_url
+                return resolved_url
             
             # Try to find video element
             try:
