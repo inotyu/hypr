@@ -188,8 +188,14 @@ class KeyboardSelector:
                                     # Tentar cada player
                                     for player_cmd in players:
                                         try:
-                                            subprocess.run(player_cmd, check=True, capture_output=True)
-                                            break
+                                            if player_cmd[0] == "mpv":
+                                                # Para MPV, não capturar output para permitir reprodução
+                                                subprocess.run(player_cmd, check=True)
+                                                break
+                                            else:
+                                                # Para outros players (browser), pode capturar
+                                                subprocess.run(player_cmd, check=True, capture_output=True)
+                                                break
                                             
                                         except (subprocess.CalledProcessError, FileNotFoundError):
                                             continue

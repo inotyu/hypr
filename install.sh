@@ -22,7 +22,7 @@ sudo pacman -S --noconfirm python python-pip mpv chromium git
 
 # Instalar dependências Python
 echo "[2/5] Instalando dependencias Python..."
-python3 -m pip install --user selenium webdriver-manager requests yt-dlp
+python3 -m pip install --break-system-packages selenium webdriver-manager requests yt-dlp beautifulsoup4 html5lib
 
 # Clonar repositório
 echo "[3/5] Clonando repositorio..."
@@ -43,6 +43,13 @@ chmod +x hypr_scraper/hypr
 # Criar link simbólico
 echo "[5/5] Criando comando global..."
 sudo ln -sf "$(pwd)/hypr_scraper/hypr" /usr/local/bin/hypr
+
+# Adicionar PYTHONPATH ao .bashrc para evitar problemas de importação
+echo "[6/6] Configurando PYTHONPATH..."
+if ! grep -q "PYTHONPATH.*hypr" ~/.bashrc; then
+    echo "export PYTHONPATH=\$PYTHONPATH:$(pwd)" >> ~/.bashrc
+fi
+export PYTHONPATH=$PYTHONPATH:$(pwd)
 
 echo ""
 echo "=================================="
