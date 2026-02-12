@@ -155,43 +155,54 @@ class KeyboardSelector:
                             
                             with HyprScraper() as scraper:
                                 video_url = scraper.get_video_url(episodes[current_row].url)
-                                
                                 if video_url:
-                                    print(f"🎬 Reproduzindo: {episodes[current_row].title}")
-                                    
                                     # Detectar sistema operacional e abrir player
                                     system = platform.system().lower()
                                     
                                     # Windows: precisa ter mpv instalado (scoop install mpv ou winget install mpv)
                                     if system == "linux":
-                                        # Linux: tentar mpv primeiro, depois browser
+                                        # Linux: FORÇAR MPV com múltiplas tentativas
+                                        # Extrair URL direta do M3U8 se for redirect
+                                        import urllib.parse
+                                        direct_m3u8 = video_url.split('d=')[-1] if 'd=' in video_url else video_url
+                                        direct_m3u8 = urllib.parse.unquote(direct_m3u8)  # Decodificar URL
+                                        
                                         players = [
-                                            ["mpv", "--no-ytdl", video_url],  # Desabilitar yt-dlp
-                                            ["mpv", video_url],
-                                            ["xdg-open", video_url]
+                                            ["mpv", "--really-quiet", direct_m3u8],  # Tentar URL direta primeiro
+                                            ["mpv", "--really-quiet", "--ytdl-raw-options=extractor-args=youtube:skip", video_url],
+                                            ["mpv", "--really-quiet", "--force-window=yes", "--ytdl-format=best", video_url],
+                                            ["mpv", "--really-quiet", "--no-ytdl", "--force-window=yes", direct_m3u8],
+                                            ["mpv", "--really-quiet", "--ytdl-format=best", video_url],
+                                            ["mpv", "--really-quiet", "--hwdec=auto", "--force-window=yes", video_url],
+                                            ["mpv", "--really-quiet", "--force-window=yes", video_url],
+                                            ["mpv", "--really-quiet", video_url]
                                         ]
                                     elif system == "windows":
                                         # Windows: tentar mpv primeiro, depois browser padrão
                                         players = [
-                                            ["mpv.exe", "--no-ytdl", video_url],  # Desabilitar yt-dlp
                                             ["mpv.exe", video_url],
-                                            ["cmd", "/c", "start", video_url]
+                                            ["mpv.exe", "--no-ytdl", video_url],
                                         ]
                                     elif system == "darwin":  # macOS
-                                        # macOS: tentar MPV primeiro com HLS support
+                                        # macOS: FORÇAR MPV com múltiplas tentativas
                                         players = [
-                                            ["mpv", "--no-ytdl", "--demuxer-lavf-format=hls", "--demuxer-lavf-o=timeout=10000000", video_url],  # MPV com HLS
-                                            ["mpv", "--no-ytdl", "--demuxer=hls", video_url],
-                                            ["mpv", "--no-ytdl", "--ytdl-raw-options=extract_flat=True", video_url],  # Tentar processar HTML
-                                            ["mpv", "--no-ytdl", video_url],
-                                            ["mpv", video_url],
-                                            ["vlc", "--no-video-title-show", video_url],  # VLC como fallback
-                                            ["cvlc", video_url],
-                                            ["open", video_url]
+                                            ["mpv", "--really-quiet", "--ytdl-raw-options=extractor-args=youtube:skip", video_url],
+                                            ["mpv", "--really-quiet", "--force-window=yes", video_url],
+                                            ["mpv", "--really-quiet", "--no-ytdl", video_url],
+                                            ["mpv", "--really-quiet", "--ytdl-format=best", video_url],
+                                            ["mpv", "--really-quiet", "--hwdec=auto", video_url],
+                                            ["mpv", "--really-quiet", video_url]
                                         ]
                                     else:
-                                        # Fallback genérico
-                                        players = [["xdg-open", video_url]]
+                                        # Fallback genérico - FORÇAR MPV em qualquer sistema
+                                        players = [
+                                            ["mpv", "--really-quiet", "--ytdl-raw-options=extractor-args=youtube:skip", video_url],
+                                            ["mpv", "--really-quiet", "--force-window=yes", video_url],
+                                            ["mpv", "--really-quiet", "--no-ytdl", video_url],
+                                            ["mpv", "--really-quiet", "--ytdl-format=best", video_url],
+                                            ["mpv", "--really-quiet", "--hwdec=auto", video_url],
+                                            ["mpv", "--really-quiet", video_url]
+                                        ]
                                     
                                     # Tentar cada player
                                     for player_cmd in players:
@@ -208,16 +219,9 @@ class KeyboardSelector:
                                         except (subprocess.CalledProcessError, FileNotFoundError):
                                             continue
                                     else:
-                                        print(f"❌ Não foi possível abrir o vídeo")
-                                else:
-                                    print(f"❌ URL do vídeo não encontrada")
+                                        video_url = "❌ Não foi possível abrir o vídeo"
                         except Exception as e:
-                            print(f"❌ Erro ao carregar vídeo")
-                            import traceback
-                            traceback.print_exc()
-                        
-                        print("Pressione Enter para continuar...")
-                        input()
+                            video_url = "❌ Erro ao carregar vídeo"
                         
                         # Recriar a tela curses
                         self.screen = curses.initscr()

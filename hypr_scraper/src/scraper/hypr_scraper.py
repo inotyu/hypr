@@ -26,7 +26,7 @@ class HyprScraper:
         self.setup_driver()
     
     def setup_driver(self):
-        """Setup Chrome driver with minimal options and network logging."""
+        """Setup Chrome driver with minimal options and clean output."""
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
@@ -35,10 +35,10 @@ class HyprScraper:
         options.add_argument('--window-size=1920,1080')
         options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
         
-        # Enable performance and network logging
+        # Enable performance and network logging for video extraction
         options.set_capability('goog:loggingPrefs', {
-            'performance': 'ALL',
-            'network': 'ALL'
+            'performance': 'ALL',  # Essential for video URL capture
+            'network': 'ALL'       # Also needed for some video URLs
         })
         
         try:

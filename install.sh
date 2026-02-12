@@ -22,7 +22,7 @@ sudo pacman -S --noconfirm python python-pip mpv chromium git
 
 # Instalar dependências Python
 echo "[2/5] Instalando dependencias Python..."
-python3 -m pip install --break-system-packages selenium webdriver-manager requests yt-dlp beautifulsoup4 html5lib
+python3 -m pip install --user --break-system-packages selenium webdriver-manager requests yt-dlp beautifulsoup4 html5lib
 
 # Clonar repositório
 echo "[3/5] Clonando repositorio..."
