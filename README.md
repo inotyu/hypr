@@ -37,26 +37,66 @@ HyprOnline é um scraper de animes que permite buscar, navegar e reproduzir cont
 
 ### Linux
 
+#### 🐧 **Instalação Automática**
+
+[![Download Linux](https://img.shields.io/badge/Download-Linux-FCC624?style=for-the-badge&logo=linux&logoColor=white)](https://raw.githubusercontent.com/inotyu/hypr/main/install.sh)
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/inotyu/hypr/main/install.sh | bash
 ```
+
+#### 📦 **O que o instalador faz:**
+- ✅ **Python 3.12+** (se não tiver)
+- ✅ **MPV Player** (reprodução de vídeos)
+- ✅ **yt-dlp** (extração de streaming)
+- ✅ **Chrome/Chromium** (navegador para scraping)
+- ✅ **Comando `hypr`** global
 
 ### macOS
 
+#### 🍎 **Instalação Automática**
+
+[![Download macOS](https://img.shields.io/badge/Download-macOS-000000?style=for-the-badge&logo=apple&logoColor=white)](https://raw.githubusercontent.com/inotyu/hypr/main/install.sh)
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/inotyu/hypr/main/install.sh | bash
 ```
 
+#### 📦 **O que o instalador faz:**
+- ✅ **Python 3.12+** (se não tiver)
+- ✅ **MPV Player** (reprodução de vídeos)
+- ✅ **yt-dlp** (extração de streaming)
+- ✅ **Chrome** (navegador para scraping)
+- ✅ **Comando `hypr`** global
+
 ### Windows
 
-Abra o **PowerShell como Administrador**:
+#### 🚀 **Instalação Automática (Recomendado)**
+
+[![Download Windows](https://img.shields.io/badge/Download-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://raw.githubusercontent.com/inotyu/hypr/main/install.bat)
+
+**Clique no botão acima** ou execute manualmente:
 
 ```powershell
+# Abra o PowerShell como Administrador e execute:
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-irm https://raw.githubusercontent.com/inotyu/hypr/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/inotyu/hypr/main/install.bat | iex
 ```
 
-Reinicie o terminal após a instalação para carregar as variáveis de ambiente.
+#### 📦 **O que o instalador faz:**
+- ✅ **Python 3.12+** (se não tiver)
+- ✅ **Git** (para atualizações)
+- ✅ **Chrome** (navegador para scraping)
+- ✅ **MPV Player** (reprodução de vídeos)
+- ✅ **yt-dlp** (extração de streaming)
+- ✅ **Atalho Desktop** (com logo oficial)
+- ✅ **Script hypr.bat** (comando global)
+
+#### 🎯 **Resultado:**
+- 🖱️ **Atalho no desktop** com logo personalizada
+- ⌨️ **Comando `hypr`** disponível globalmente
+- 🎬 **Reprodução automática** no MPV
+- 🎨 **Interface pronta** para uso
 
 ---
 
